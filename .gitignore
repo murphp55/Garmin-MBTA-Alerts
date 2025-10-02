@@ -1,0 +1,9 @@
+# Garmin / build
+/bin/
+/deploy/
+*.prg
+*.iq
+# Editors
+.vscode/
+.idea/
+.DS_Store

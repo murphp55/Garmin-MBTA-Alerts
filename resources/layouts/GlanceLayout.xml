@@ -1,0 +1,4 @@
+<layout id="GlanceLayout">
+  <label id="glTitle" x="center" y="10" text="MBTA Alerts"/>
+  <label id="glLine1" x="center" y="50" text="—"/>
+</layout>
