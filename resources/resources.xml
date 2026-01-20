@@ -2,6 +2,6 @@
   <string id="AppName">MBTA Alerts</string>
   <layout id="ViewAlertsLayout">@Layouts.ViewAlertsLayout</layout>
   <layout id="GlanceLayout">@Layouts.GlanceLayout</layout>
-  <!-- Optional images -->
-  <!-- <drawable id="LauncherIcon">images/icon.png</drawable> -->
+  <bitmap id="LauncherIcon" filename="launcher_icon.svg"/>
+  <jsonData id="Stops" filename="mbta_stops.json"/>
 </resources>

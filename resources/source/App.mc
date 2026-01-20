@@ -7,6 +7,7 @@ class App extends App.AppBase {
     function onStop(state) { }
 
     function getInitialView() {
-        return [ new AlertsView() ];
+        var menu = new HomeMenu();
+        return [ menu, new HomeMenuDelegate() ];
     }
 }

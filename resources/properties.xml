@@ -1,0 +1,9 @@
+<properties>
+  <property id="mbtaApiKey" type="string">2f5a2eeb8d0442498fa177a3f2709bde</property>
+  <property id="radiusMeters" type="number">1000</property>
+  <property id="maxStops" type="number">8</property>
+  <property id="stopId" type="string"></property>
+  <property id="routeFilter" type="string"></property>
+  <property id="direction" type="number">0</property>
+  <property id="maxRows" type="number">6</property>
+</properties>

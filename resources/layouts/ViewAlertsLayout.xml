@@ -1,4 +1,4 @@
 <layout id="ViewAlertsLayout">
   <label id="title" x="center" y="10" text="@Strings.AppName" />
-  <list id="alertsList" x="10" y="40" w="fill" h="fill"/>
+  <text-area id="body" x="10" y="40" width="fill" height="fill"/>
 </layout>

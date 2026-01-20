@@ -4,6 +4,8 @@ using Toybox.Lang as Lang;
 
 class AlertsView extends Ui.View {
     var _delegate;
+    var _title;
+    var _body;
 
     function onShow() {
         _delegate = new AlertsDelegate(self.method(:onData), self.method(:onError));
@@ -11,19 +13,31 @@ class AlertsView extends Ui.View {
         _delegate.loadAlerts(); // async fetch
     }
 
-    function onUpdate(dc) {
-        var layout = Ui.loadResource(Ui.RESOURCES_LAYOUT, Rez.Layouts.ViewAlertsLayout);
-        var list = layout.findById("alertsList") as Ui.List;
+    function onLayout(dc) {
+        setLayout(Rez.Layouts.ViewAlertsLayout(dc));
+        _title = findDrawableById("title");
+        _body = findDrawableById("body");
+    }
 
-        var model = _delegate?.getModel();
-        if (model == null || model.state == :loading) {
-            list.setItems([ "Loading…" ]);
-        } else if (model.state == :error) {
-            list.setItems([ "Error: " + model.errorMessage ]);
-        } else {
-            list.setItems(model.lines); // array of strings
+    function onUpdate(dc) {
+        var model = null;
+        if (_delegate != null) {
+            model = _delegate.getModel();
         }
-        layout.draw(dc);
+
+        if (_title != null) {
+            _title.setText(Rez.Strings.MenuAlerts);
+        }
+        if (_body != null) {
+            if (model == null || model[:state] == :loading) {
+                _body.setText(Rez.Strings.Loading);
+            } else if (model[:state] == :error) {
+                _body.setText(Rez.Strings.Error + ": " + model[:errorMessage]);
+            } else {
+                _body.setText(Util.join(model[:lines], "\n"));
+            }
+        }
+        View.onUpdate(dc);
     }
 
     function onData() { Ui.requestUpdate(); }

@@ -1,5 +1,22 @@
 <strings>
-  <string id="Loading">Loading…</string>
+  <string id="Loading">Loading.</string>
   <string id="NoAlerts">No alerts</string>
   <string id="Error">Error</string>
+  <string id="HomeTitle">MBTA</string>
+  <string id="MenuNearby">Nearby Stations</string>
+  <string id="MenuAlerts">Alerts</string>
+  <string id="MbtaApiKeyTitle">MBTA API Key</string>
+  <string id="MbtaApiKeyPrompt">Enter your MBTA API key</string>
+  <string id="RadiusMetersTitle">Search Radius (m)</string>
+  <string id="RadiusMetersPrompt">Radius in meters</string>
+  <string id="MaxStopsTitle">Max Stations</string>
+  <string id="MaxStopsPrompt">Maximum nearby stations</string>
+  <string id="AlertStopIdTitle">Alert Stop ID</string>
+  <string id="AlertStopIdPrompt">Optional stop filter (stop id)</string>
+  <string id="AlertRouteFilterTitle">Alert Route Filter</string>
+  <string id="AlertRouteFilterPrompt">Optional route filter (route id)</string>
+  <string id="AlertDirectionTitle">Alert Direction</string>
+  <string id="AlertDirectionPrompt">Optional direction 0 or 1</string>
+  <string id="AlertMaxRowsTitle">Alert Max Rows</string>
+  <string id="AlertMaxRowsPrompt">Maximum alert rows to show</string>
 </strings>
