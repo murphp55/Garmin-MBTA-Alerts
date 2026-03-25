@@ -20,8 +20,7 @@ class HomeMenu extends Ui.Menu2 {
         }
         _itemCount = 0;
         addItem(new Ui.MenuItem(Rez.Strings.MenuNearby, null, { :id => :nearby }, {}));
-        addItem(new Ui.MenuItem(Rez.Strings.MenuAlerts, null, { :id => :alerts }, {}));
-        _itemCount = 2;
+        _itemCount = 1;
     }
 }
 
@@ -30,15 +29,42 @@ class HomeMenuDelegate extends Ui.Menu2InputDelegate {
         Menu2InputDelegate.initialize();
     }
 
+    function onBack() {
+        Log.info("HomeMenu back");
+        Ui.popView(Ui.SLIDE_IMMEDIATE);
+    }
+
+    function onNextPage() {
+        Log.info("HomeMenu nextPage");
+        return false;
+    }
+
+    function onPreviousPage() {
+        Log.info("HomeMenu prevPage");
+        return false;
+    }
+
+    function onWrap(key) {
+        Log.info("HomeMenu wrap " + key);
+        return true;
+    }
+
+    function onTitle() {
+        Log.info("HomeMenu title");
+    }
+
+    function onFooter() {
+        Log.info("HomeMenu footer");
+    }
+
     function onSelect(item) {
+        Log.info("HomeMenu select");
         var info = item.getId() as Lang.Dictionary;
         if (info == null) {
             return;
         }
         if (info[:id] == :nearby) {
             Ui.pushView(new StationsMenu(), new StationsMenuDelegate(), Ui.SLIDE_IMMEDIATE);
-        } else if (info[:id] == :alerts) {
-            Ui.pushView(new AlertsView(), null, Ui.SLIDE_IMMEDIATE);
         }
     }
 }

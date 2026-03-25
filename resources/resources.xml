@@ -4,4 +4,20 @@
   <layout id="GlanceLayout">@Layouts.GlanceLayout</layout>
   <bitmap id="LauncherIcon" filename="launcher_icon.svg"/>
   <jsonData id="Stops" filename="mbta_stops.json"/>
+  <bitmap id="DotR" filename="dots/dot_r.svg"/>
+  <bitmap id="DotO" filename="dots/dot_o.svg"/>
+  <bitmap id="DotB" filename="dots/dot_b.svg"/>
+  <bitmap id="DotG" filename="dots/dot_g.svg"/>
+  <bitmap id="DotRO" filename="dots/dot_ro.svg"/>
+  <bitmap id="DotRB" filename="dots/dot_rb.svg"/>
+  <bitmap id="DotRG" filename="dots/dot_rg.svg"/>
+  <bitmap id="DotOB" filename="dots/dot_ob.svg"/>
+  <bitmap id="DotOG" filename="dots/dot_og.svg"/>
+  <bitmap id="DotBG" filename="dots/dot_bg.svg"/>
+  <bitmap id="DotROB" filename="dots/dot_rob.svg"/>
+  <bitmap id="DotROG" filename="dots/dot_rog.svg"/>
+  <bitmap id="DotRBG" filename="dots/dot_rbg.svg"/>
+  <bitmap id="DotOBG" filename="dots/dot_obg.svg"/>
+  <bitmap id="DotROBG" filename="dots/dot_robg.svg"/>
 </resources>
+

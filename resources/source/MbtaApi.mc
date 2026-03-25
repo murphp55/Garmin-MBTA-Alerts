@@ -5,43 +5,6 @@ import Toybox.Lang;
 class MbtaApi {
     var _cbOk;
     var _cbErr;
-    var _maxRows;
-
-    function fetchAlerts(cfg, onOk, onErr) {
-        if (cfg == null || cfg[:mbtaApiKey] == null) {
-            onErr.invoke("Missing API key");
-            return;
-        }
-        var url = "https://api-v3.mbta.com/alerts";
-        var q = [];
-
-        if (cfg != null && cfg[:stopId] != null) {
-            q.add("filter[stop]=" + cfg[:stopId]);
-        }
-        if (cfg != null && cfg[:routeFilter] != null) {
-            q.add("filter[route]=" + cfg[:routeFilter]);
-        }
-        if (cfg != null && cfg[:direction] != null) {
-            q.add("filter[direction_id]=" + cfg[:direction]);
-        }
-
-        q.add("filter[activity]=BOARD,EXIT");
-        q.add("sort=-updated_at");
-        if (q.size() > 0) {
-            url = url + "?" + _join(q, "&");
-        }
-
-        _cbOk = onOk;
-        _cbErr = onErr;
-        _maxRows = null;
-        if (cfg != null) {
-            _maxRows = cfg[:maxRows];
-        }
-
-        var headers = { "x-api-key" => cfg[:mbtaApiKey] };
-        Comm.makeWebRequest(url, null, { :headers => headers,
-            :responseType => Comm.HTTP_RESPONSE_CONTENT_TYPE_JSON }, method(:_handleAlertsResponse));
-    }
 
     function fetchNearbyStops(cfg, lat, lon, radiusMeters, maxStops, onOk, onErr) {
         if (cfg == null || cfg[:mbtaApiKey] == null) {
@@ -63,6 +26,7 @@ class MbtaApi {
         _cbOk = onOk;
         _cbErr = onErr;
 
+        Log.info("MBTA GET " + url);
         var headers = { "x-api-key" => cfg[:mbtaApiKey] };
         Comm.makeWebRequest(url, null, { :headers => headers,
             :responseType => Comm.HTTP_RESPONSE_CONTENT_TYPE_JSON }, method(:_handleStopsResponse));
@@ -85,33 +49,10 @@ class MbtaApi {
         _cbOk = onOk;
         _cbErr = onErr;
 
+        Log.info("MBTA GET " + url);
         var headers = { "x-api-key" => cfg[:mbtaApiKey] };
         Comm.makeWebRequest(url, null, { :headers => headers,
             :responseType => Comm.HTTP_RESPONSE_CONTENT_TYPE_JSON }, method(:_handlePredictionsResponse));
-    }
-
-    function _handleAlertsResponse(respCode as Number, data as Dictionary or String or Null) as Void {
-        try {
-            if (respCode != 200) {
-                _cbErr.invoke("HTTP " + respCode);
-                return;
-            }
-            var json = data;
-            var arr = (json != null && json.hasKey("data")) ? json["data"] : [];
-            var out = [];
-            var count = 0;
-
-            for (var i = 0; i < arr.size(); i += 1) {
-                if (_maxRows != null && count >= _maxRows) {
-                    break;
-                }
-                out.add(Alert.fromJson(arr[i]));
-                count += 1;
-            }
-            _cbOk.invoke(out);
-        } catch(e) {
-            _cbErr.invoke("Parse error");
-        }
     }
 
     function _handleStopsResponse(respCode as Number, data as Dictionary or String or Null) as Void {
@@ -141,6 +82,12 @@ class MbtaApi {
             }
             var json = data;
             var arr = (json != null && json.hasKey("data")) ? json["data"] : [];
+            Log.info("MBTA predictions respCode=" + respCode + " count=" + arr.size());
+            if (arr.size() > 0) {
+                var first = arr[0];
+                var firstId = (first != null && first.hasKey("id")) ? first["id"] : "";
+                Log.info("MBTA predictions firstId=" + firstId);
+            }
             var out = [];
 
             for (var i = 0; i < arr.size(); i += 1) {

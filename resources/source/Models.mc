@@ -1,5 +1,5 @@
 class Stop {
-    var id, name, latitude, longitude, distanceMiles;
+    var id, name, latitude, longitude, distanceMiles, parentStation, platformName, stationColors, platformColors;
 
     static function fromJson(j) {
         var s = new Stop();
@@ -13,9 +13,20 @@ class Stop {
         if (attrs != null) {
             s.latitude = attrs["latitude"];
             s.longitude = attrs["longitude"];
+            s.platformName = attrs["platform_name"];
         } else {
             s.latitude = null;
             s.longitude = null;
+            s.platformName = null;
+        }
+        s.stationColors = null;
+        s.platformColors = null;
+        var rel = j["relationships"];
+        if (rel != null && rel.hasKey("parent_station")) {
+            var data = rel["parent_station"]["data"];
+            if (data != null) {
+                s.parentStation = data["id"];
+            }
         }
         s.distanceMiles = null;
         return s;
@@ -23,7 +34,7 @@ class Stop {
 }
 
 class Prediction {
-    var directionId, time, routeId;
+    var directionId, time, routeId, scheduleRelationship;
 
     static function fromJson(j) {
         var p = new Prediction();
@@ -35,6 +46,7 @@ class Prediction {
             } else {
                 p.time = attrs["departure_time"];
             }
+            p.scheduleRelationship = attrs["schedule_relationship"];
         }
 
         var rel = j["relationships"];
@@ -45,59 +57,5 @@ class Prediction {
             }
         }
         return p;
-    }
-}
-
-class Alert {
-    var id, header, effect, route, updatedAt;
-
-    static function fromJson(j) {
-        var a = new Alert();
-        a.id = j["id"];
-        var attrs = j["attributes"];
-        if (attrs != null && attrs["header"] != null) {
-            a.header = attrs["header"];
-        } else if (attrs != null && attrs["short_header"] != null) {
-            a.header = attrs["short_header"];
-        } else {
-            a.header = "Alert";
-        }
-        if (attrs != null) {
-            a.effect = attrs["effect"];
-            a.updatedAt = attrs["updated_at"];
-        } else {
-            a.effect = null;
-            a.updatedAt = null;
-        }
-        a.route = null;
-        var rel = j["relationships"];
-        if (rel != null && rel.hasKey("routes")) {
-            var routes = rel["routes"]["data"];
-            if (routes != null && routes.size() > 0) {
-                a.route = routes[0]["id"];
-            }
-        }
-        return a;
-    }
-
-    function toLine() {
-        var prefix = "";
-        if (route != null) {
-            prefix = route;
-        }
-        if (effect != null) {
-            if (prefix != "") { prefix += " "; }
-            prefix += effect;
-        }
-        if (updatedAt != null) {
-            if (prefix != "") { prefix += " "; }
-            prefix += Util.formatIsoTime(updatedAt);
-        }
-
-        var msg = (header != null) ? header : "Alert";
-        if (prefix != "") {
-            return Util.truncate(prefix + " - " + msg, 60);
-        }
-        return Util.truncate(msg, 60);
     }
 }

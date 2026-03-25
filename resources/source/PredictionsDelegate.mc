@@ -20,28 +20,33 @@ class PredictionsDelegate {
     }
 
     function _onSuccess(predictions) {
-        var inbound = null;
-        var outbound = null;
-
+        var lines = [];
         if (predictions != null) {
             for (var i = 0; i < predictions.size(); i += 1) {
                 var p = predictions[i];
-                if (p.directionId == 0 && inbound == null) {
-                    inbound = p;
+                if (p.scheduleRelationship == "CANCELLED") {
+                    continue;
                 }
-                if (p.directionId == 1 && outbound == null) {
-                    outbound = p;
+                var dir = (p.directionId == 0) ? "Inbound" : "Outbound";
+                var line = dir + ": ";
+
+                var mins = Util.minutesFromIso(p.time);
+                if (mins == null) {
+                    line += "No time";
+                } else {
+                    line += mins + " min";
                 }
-                if (inbound != null && outbound != null) {
-                    break;
+
+                if (p.routeId != null) {
+                    line += " (" + p.routeId + ")";
                 }
+                lines.add(line);
             }
         }
 
-        var lines = [
-            "Inbound: " + Util.formatPredictionTime(inbound),
-            "Outbound: " + Util.formatPredictionTime(outbound)
-        ];
+        if (lines.size() == 0) {
+            lines.add("No predictions");
+        }
         _model = { :state => :ready, :lines => lines };
         _cbOk.invoke();
     }

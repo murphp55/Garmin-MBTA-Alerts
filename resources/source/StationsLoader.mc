@@ -1,4 +1,5 @@
 using Toybox.Position as Position;
+using Toybox.Application as App;
 
 class StationsLoader {
     var _cbOk, _cbErr;
@@ -77,7 +78,7 @@ class StationsLoader {
 
     function _loadLocalStops() {
         try {
-            var arr = Rez.Json.Stops;
+            var arr = App.loadResource(Rez.JsonData.Stops);
             if (arr == null) {
                 return null;
             }
@@ -85,11 +86,35 @@ class StationsLoader {
             var out = [];
             for (var i = 0; i < arr.size(); i += 1) {
                 var j = arr[i];
+                var attrs = j["attributes"];
                 var s = new Stop();
                 s.id = j["id"];
-                s.name = (j["name"] != null) ? j["name"] : "Station";
-                s.latitude = j["latitude"];
-                s.longitude = j["longitude"];
+                if (attrs != null) {
+                    s.name = (attrs["name"] != null) ? attrs["name"] : "Station";
+                    s.latitude = attrs["latitude"];
+                    s.longitude = attrs["longitude"];
+                    s.platformName = attrs["platform_name"];
+                    s.parentStation = attrs["parent_station"];
+                    s.stationColors = attrs["station_colors"];
+                    s.platformColors = attrs["platform_colors"];
+                } else {
+                    s.name = (j["name"] != null) ? j["name"] : "Station";
+                    s.latitude = j["latitude"];
+                    s.longitude = j["longitude"];
+                    s.platformName = j["platform_name"];
+                    s.parentStation = j["parent_station"];
+                    s.stationColors = j["station_colors"];
+                    s.platformColors = j["platform_colors"];
+                }
+                if (s.parentStation == null) {
+                    var rel = j["relationships"];
+                    if (rel != null && rel.hasKey("parent_station")) {
+                        var data = rel["parent_station"]["data"];
+                        if (data != null) {
+                            s.parentStation = data["id"];
+                        }
+                    }
+                }
                 s.distanceMiles = null;
                 out.add(s);
             }
